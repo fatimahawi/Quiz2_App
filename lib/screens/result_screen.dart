@@ -1,42 +1,40 @@
 import 'package:flutter/material.dart';
+import '../widgets/recipe_item.dart';
+import '../data/recipes.dart';
 
-class ResultScreen extends StatelessWidget {
-  final double averageRating;
-  final String topRecipeName;
-  final VoidCallback onRestart;
+class RecipesScreen extends StatelessWidget {
+  final void Function(int, String) onSelectRating;
+  final VoidCallback onSubmit;
 
-  const ResultScreen({
+  const RecipesScreen({
     super.key,
-    required this.averageRating,
-    required this.topRecipeName,
-    required this.onRestart,
+    required this.onSelectRating,
+    required this.onSubmit,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(30),
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
-              "Average Rating: ${averageRating.toStringAsFixed(1)} ⭐",
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 15),
-            Text(
-              "Top Recipe: $topRecipeName",
-              style: const TextStyle(fontSize: 20),
-            ),
+            ...recipes.asMap().entries.map((entry) {
+              int index = entry.key;
+              var recipe = entry.value;
+
+              return RecipeItem(
+                recipe: recipe,
+                index: index,
+                onSelectRating: onSelectRating,
+              );
+            }),
+
             const SizedBox(height: 30),
 
             ElevatedButton(
-              onPressed: onRestart,
-              child: const Text("Restart"),
+              onPressed: onSubmit,
+              child: const Text("Submit"),
             ),
           ],
         ),

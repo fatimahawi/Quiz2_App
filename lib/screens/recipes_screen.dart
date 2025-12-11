@@ -4,7 +4,7 @@ import '../data/recipes.dart';
 
 class RecipesScreen extends StatelessWidget {
   final void Function(int, String) onSelectRating;
-  final Function() onSubmit;
+  final VoidCallback onSubmit;
 
   const RecipesScreen({
     super.key,
@@ -14,23 +14,27 @@ class RecipesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: Column(
-        children: [
-          ...recipes.asMap().entries.map((entry) {
-            int index = entry.key;
-            var recipe = entry.value;
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 20),
+        child: Column(
+          children: [
+            ...recipes.asMap().entries.map((entry) {
+              return RecipeItem(
+                recipe: entry.value,
+                index: entry.key,
+                onSelectRating: onSelectRating,
+              );
+            }),
 
-            return RecipeItem(
-              recipe: recipe,
-              index: index,
-              onSelectRating: onSelectRating,
-            );
-          }),
+            const SizedBox(height: 30),
 
-          const SizedBox(height: 20),
-        ],
+            ElevatedButton(
+              onPressed: onSubmit,
+              child: const Text("Submit"),
+            ),
+          ],
+        ),
       ),
     );
   }
